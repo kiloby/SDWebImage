@@ -260,8 +260,13 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         } else {
             // `CGImageSourceCreateThumbnailAtIndex` take only pixel dimension, if not `preserveAspectRatio`, we should manual scale to the target size
             CGImageRef scaledImageRef = [SDImageCoderHelper CGImageCreateScaled:imageRef size:thumbnailSize];
-            CGImageRelease(imageRef);
-            imageRef = scaledImageRef;
+            if (scaledImageRef) {
+                CGImageRelease(imageRef);
+                imageRef = scaledImageRef;
+            } else {
+                CGImageRelease(imageRef);
+                return nil;
+            }
         }
     }
     
